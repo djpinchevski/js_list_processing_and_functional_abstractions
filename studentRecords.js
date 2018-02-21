@@ -39,6 +39,16 @@ var studentScores = {
   },
 };
 
+function sumFromArray(array) {
+  return array.reduce(function (acc, num) {
+    return acc + num;
+  });
+}
+
+function avgFromArray(array) {
+  return sumFromArray(array) / array.length;
+}
+
 function minFromArray(array) {
   return array.slice().sort(numericSort)[0];
 }
@@ -49,16 +59,6 @@ function maxFromArray(array) {
 
 function numericSort(a, b) {
   return a - b;
-}
-
-function avgFromArray(array) {
-  return sumFromArray(array) / array.length;
-}
-
-function sumFromArray(array) {
-  return array.reduce(function (acc, num) {
-    return acc + num;
-  });
 }
 
 function convertNumberToLetterGrade(num) {
@@ -106,6 +106,7 @@ function fillStudentGrades(students) {
     finalGrade = examAvg * examWeight + exerciseAvg * exerciseWeight;
     roundedFinalGrade = Math.round(finalGrade);
     equivalentLetterGrade = convertNumberToLetterGrade(roundedFinalGrade);
+
     return String(roundedFinalGrade) + ' ' + equivalentLetterGrade;
   });
 }
@@ -122,7 +123,7 @@ function generateClassRecordSummary(scores) {
     ],
   };
 
-  summary['studentGrades'] = fillStudentGrades(scores);
+  summary.studentGrades = fillStudentGrades(scores);
   examScores = extractExamScores(scores);
   summary.exams.forEach(function (exam, index, array) {
     exam.average = avgFromArray(examScores[index]);
