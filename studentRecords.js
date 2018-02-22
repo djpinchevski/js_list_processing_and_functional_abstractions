@@ -77,20 +77,18 @@ function convertNumberToLetterGrade(num) {
   }
 }
 
-function extractExamScores(scores) {
-  var exam1Scores = [];
-  var exam2Scores = [];
-  var exam3Scores = [];
-  var exam4Scores = [];
+function extractExamScores(students) {
+  var firstStudent = Object.keys(students)[0];
 
-  Object.keys(scores).forEach(function (key, index, array) {
-    exam1Scores[index] = scores[key].scores.exams[0];
-    exam2Scores[index] = scores[key].scores.exams[1];
-    exam3Scores[index] = scores[key].scores.exams[2];
-    exam4Scores[index] = scores[key].scores.exams[3];
+  return students[firstStudent].scores.exams.map(function (exam, idx) {
+    var scoresOfEachExam = [];
+
+    Object.keys(students).forEach(function (student) {
+     scoresOfEachExam.push(students[student].scores.exams[idx]);
+    });
+
+    return scoresOfEachExam;
   });
-
-  return [exam1Scores, exam2Scores, exam3Scores, exam4Scores,];
 }
 
 function fillStudentGrades(students) {
@@ -113,23 +111,20 @@ function fillStudentGrades(students) {
 
 function generateClassRecordSummary(scores) {
   var examScores;
+  var i;
   var summary = {
     studentGrades: [],
-    exams: [
-      { average: 0, minimum: 0, maximum: 0},
-      { average: 0, minimum: 0, maximum: 0},
-      { average: 0, minimum: 0, maximum: 0},
-      { average: 0, minimum: 0, maximum: 0},
-    ],
+    exams: [],
   };
 
   summary.studentGrades = fillStudentGrades(scores);
   examScores = extractExamScores(scores);
-  summary.exams.forEach(function (exam, index, array) {
-    exam.average = avgFromArray(examScores[index]);
-    exam.minimum = minFromArray(examScores[index]);
-    exam.maximum = maxFromArray(examScores[index]);
-  });
+  for (i = 0; i < examScores.length; i += 1) {
+    summary.exams[i] = new Object;
+    summary.exams[i].average = avgFromArray(examScores[i]);
+    summary.exams[i].minimum = minFromArray(examScores[i]);
+    summary.exams[i].maximum = maxFromArray(examScores[i]);
+  }
 
   return summary;
 }
